@@ -1,0 +1,62 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{verbatim}
+
+\geometry{
+total={160mm,257mm},
+left=20mm,
+top=15mm,
+bottom=20mm
+}
+
+\begin{document}
+\begin{center}
+    {\huge Range Query}
+
+    Author: Taylor Wong
+\end{center}
+
+Say we have an array of $n$ integers $A$ and we're tasked with determining the sum of the integers in $A$ within a range of indices $[l, r]$. One way to do this is to simply iterate through the array from index $l$ to $r$ and accumulate the sum. In the worst case, this approach takes $O(n)$ time when $l = 0$ and $r = n - 1$. Since we need to read all $n$ elements, this is optimal and has minimal overhead. However, what if we modify the problem slightly? Suppose we have to answer multiple range sum queries on the same array $A$. Say we have $q$ queries, each asking for the sum of elements between indices $l_i$ and $r_i$. If we use the naive approach for each query, the total time complexity would be $O(qn)$ in the worst case, which gets much worse as the number of queries $q$ increases. It's also important to note that $q$ can be as large as $O(n^2)$ since there are $O(n^2)$ possible ranges in an array of size $n$, so $q$ will dominate $n$ but we will still express our final time complexity in terms of both $n$ and $q$ since not all problems will allow $q$ to get that large. Additionally, since any approach must answer all $q$ queries, instead of measuring the overall time complexity, we will measure the average time complexity per query. In this case, the average time complexity per query using the naive approach is $O(n)$.
+
+One way we often optimize these kinds of problems is by using precomputation. For example, we can create an $n \times n$ table where the entry at row $i$ and column $j$ stores the sum of elements from index $i$ to index $j$ in the array $A$. Now, if we fill the table out naively we would still take $O(n^3)$ time, since there are $O(n^2)$ entries in the table and each entry takes $O(n)$ time to compute. However, we can fill out the table more cleverly. Notice that the sum from index $i$ to index $j$ can be computed as the sum from index $i$ to index $j-1$ plus the element at index $j$. This means we can extend a row of the table in $O(1)$ time per entry. Thus, we can fill out the entire table in $O(n^2)$ time. Once the table is filled out, we can answer each range sum query in $O(1)$ time by simply looking up the corresponding entry in the table. While this is a massive improvement over the naive $O(n)$ approach, this method uses $O(n^2)$ space to store the table, which can be make this a non-starter for even $n=50000$.
+
+To improve further we can use a similar property as we did when filling out the table. Much like how the sum from index $i$ to index $j$ can be computed from the sum from index $i$ to index $j-1$ and adding the element at index $j$, we can also compute it from the sum from index $i-1$ to index $j$ and subtracting the element at index $i-1$. Now this might seem worse since it requires computing a larger range sum but if we generalize further, we can see that the sum from $i$ to $j$ can be computed by taking the sum from $i-k$ to $j$ and subtracting the sum from $i-k$ to $i-1$ for any $k <= i$. Particularly if we let $k = i$, we see that the sum from index $i$ to index $j$ can be computed as the sum from index $0$ to index $j$ minus the sum from index $0$ to index $i-1$. Now since both of these start from the same index $0$ we can use the same precomputational approach as before but we only need one row of the table (namely the first one). This gives us an array which we call a prefix array $P$ where the entry at index $i$ stores the sum of elements from index $0$ to index $i$ in the array $A$. We can fill out this prefix sum array in $O(n)$ time just as before. Once we have the prefix array, we can answer each range sum query in $O(1)$ time by computing the difference between entries $j$ and $i - 1$ in the prefix sum array. Of course there is an edge case where $i=0$. However, we can just return entry $j$ since the $j^{th}$ entry of the prefix array by definition stores the sum from $0$ to $j$. Thus, our queries can again be answered in $O(1)$ time but now we're only using $O(n)$ space for the prefix sum array, making it much more space-efficient than the previous method.
+
+Now prefix arrays are actually optimal for this problem in terms of both time and space complexity, since we have to answer all queries and we need $O(n)$ space to store the array itself.
+
+
+Let's look at an example. Suppose we have the array $A = [3, 2, -1, 6, 5]$ and $q = 3$ queries:
+\begin{enumerate}
+    \item $[1, 3]$
+    \item $[0, 4]$
+    \item $[2, 2]$
+\end{enumerate}
+First, we compute the prefix sum array $P$:
+\begin{itemize}
+    \item $P[0] = A[0] = 3$
+    \item $P[1] = P[0] + A[1] = 3 + 2 = 5$
+    \item $P[2] = P[1] + A[2] = 5 + (-1) = 4$
+    \item $P[3] = P[2] + A[3] = 4 + 6 = 10$
+    \item $P[4] = P[3] + A[4] = 10 + 5 = 15$
+\end{itemize}
+Now, we can answer each query using the prefix sum array:
+\begin{enumerate}
+    \item For the range $[1, 3]$, the sum is $P[3] - P[0] = 10 - 3 = 7$.
+    \item For the range $[0, 4]$, the sum is $P[4] = 15$ (since $i=0$).
+    \item For the range $[2, 2]$, the sum is $P[2] - P[1] = 4 - 5 = -1$.
+\end{enumerate}
+
+
+Now let's make a seemingly small modification to the original problem. Now mixed into the queries are update operations that change the value of an element in the array $A$. For example, we might have a query that changes the value at index $k$ to some new value $v$. Now since we have two different operations (queries and updates), we're going to consider both the average time per query and the average time per update, when evaluating our approaches.
+
+If we go back to our naive approach, we can still answer range sum queries in $O(n)$ time by iterating through the array from index $l$ to index $r$. Updates can also be done in $O(1)$ time by simply changing the value at index $k$ to $v$. Thus, the average time per query is $O(n)$ and the average time per update is $O(1)$. So if we have a lot more updates than queries, this might be acceptable. However, this is generally not the case.
+
+If we use the prefix sum array approach, we can still answer range sum queries in $O(1)$ time as before. However, updates are more complicated. If we change the value at index $k$ to $v$, we need to update all entries in the prefix sum array from index $k$ to index $n-1$ to reflect this change. This is because each of these entries includes the value at index $k$ in their sums. Thus, an update operation takes $O(n)$ time in the worst case. Therefore, the average time per query is $O(1)$ but the average time per update is $O(n)$. Since there generally are more queries than updates, this is usually better than the naive approach, but we can still do better.
+
+Notice the issue with the prefix array is that when an update occures, we have to update many entries in the prefix array. This means that in terms of updating, the $i^{th}$ entry of the prefix array is dependent on all previous entries, which means that earlier entries have a lot of other entries depending on them. The naive approach maximizes this by not having any reliance and instead re-computing the range sum for each query. Our goal now is to reduce the number of entries that depend on any one entry, while still maintaining efficient query times. One way to do this is to use a data structure called a Fenwick Tree, also known as a Binary Indexed Tree (BIT). A Fenwick Tree is a data structure that doesn't store the prefix sums directly, but instead stores partial sums that can be combined to get the prefix sums quickly, while also allowing for efficient updates.
+
+
+
+\end{document}

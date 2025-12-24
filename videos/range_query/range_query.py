@@ -1,13 +1,13 @@
 from manim import *
 
-class range_query(Scene):
+class RangeQuery(Scene):
 
     def init(self) -> None:
+        # Initialization code goes here
         ...
 
     def construct(self) -> None:
-        # Initialize variables
         self.init()
 
-        # Animate Scene
+        # Your animation code goes here
         ...
