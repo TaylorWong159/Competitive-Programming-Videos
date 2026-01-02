@@ -8,17 +8,16 @@ class ProblemStatement(Scene):
             Square(side_length=box_size)
                 .set_fill(WHITE, opacity=0.125)
                 .set_stroke(WHITE, width=2)
-                .move_to((box_size * i - box_size * ((len(array) - 1) // 2), 3, 0))
+                .move_to((box_size * i - box_size * ((len(array) - 1) // 2), 2.9, 0))
             for i in range(len(array))
         ])
         numbers = VGroup(*[
-            Text(str(array[i]), font_size=36)
-                .move_to(boxes[i].get_center())
+            Text(str(array[i]), font_size=36).move_to(boxes[i])
             for i in range(len(array))
         ])
         indices = VGroup(*[
             Text(str(i), font_size=24)
-                .move_to((boxes[i].get_center()[0], boxes[i].get_center()[1] - box_size, 0))
+                .next_to(boxes[i], UP)
             for i in range(len(array))
         ])
 
@@ -26,7 +25,7 @@ class ProblemStatement(Scene):
         range_end = 7
         assert 0 <= range_start <= range_end < len(array)
         range_text = Text(f'Query: [{range_start}, {range_end}]', font_size=36) \
-            .move_to((0, 1, 0))
+            .next_to(boxes, DOWN)
 
 
         # Animate the array
@@ -51,8 +50,9 @@ class ProblemStatement(Scene):
 
         # Animate range sum query
         sum_value = 0
-        sum_text_label = Text('Sum = ', font_size=36).move_to((-0.5, 0, 0))
+        sum_text_label = Text('Sum = ', font_size=36).next_to(range_text, DOWN).shift(LEFT * 0.5)
         sum_text = Text(f'{sum_value}', font_size=36).next_to(sum_text_label, RIGHT)
+        sum_group = VGroup(sum_text_label, sum_text)
         self.play(Write(sum_text_label), Write(sum_text))
         for i in range(range_start, range_end + 1):
             original_stroke = boxes[i].get_stroke_width()
@@ -66,11 +66,11 @@ class ProblemStatement(Scene):
 
         self.wait(8)
 
-        naive_complexity_text = Text('Time Complexity: O(n)', font_size=36).move_to((0, -1, 0))
+        naive_complexity_text = Text('Time Complexity: O(n)', font_size=36).next_to(sum_group, DOWN)
         self.play(Write(naive_complexity_text))
 
         self.wait(1)
-        self.play(Write(Text('Per Query', font_size=36).next_to(naive_complexity_text, RIGHT)))
+        self.play(Write(Text('Per Query', font_size=36).next_to(naive_complexity_text, DOWN)))
         self.wait(4)
 
         self.clear()
