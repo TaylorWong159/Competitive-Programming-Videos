@@ -12,10 +12,37 @@ bottom=20mm
 }
 
 \begin{document}
-\begin{center}
-    {\huge Greedy Algorithms}
+    \begin{center}
+        {\huge Greedy Algorithms}
 
-    Author: Taylor Wong
-\end{center}
+        Author: Taylor Wong
+    \end{center}
+
+    \section*{Introduction}
+    In this video, we're going to talk about a category/paradigm of algorithms known as greedy algorithms. First we're going to define what greedy algorithms and greedy problems are and what makes them unique. Then we'll discuss the two common approaches to implementing greedy algorithms including examples of each approach. Finally, we'll discuss some common pitfalls and limitations of greedy algorithms.
+
+    \section*{What are Greedy Algorithms?}
+    Before we define what a greedy algorithm is, we first need to understand what greedy problems are. Now this may seem a bit circular, but I'm going to define a greedy problem as a problem that can be solved optimally by a greedy algorithm. I know that doesn't really help us much right now, but bear with me. These problems have two main properties:
+    \begin{itemize}
+        \item Optimal Substructure: An optimal solution to the problem is composed of optimal solutions to subproblems.
+        \item Greedy Choice Property: A global optimal solution can be arrived at by making a series of local optimal (greedy) choices.
+    \end{itemize}
+    These two properties are a little abstract, so let's simplify them a bit. In order for a problem to be greedy, we must be able to frame the problem in terms of making a series of choices. Further, we must be able to show that at each step, we have enough information to make a choice that is optimal at that step, and that by making these optimal choices at each step, we will arrive at a globally optimal solution to the problem. In short, the best choice at each step must provably lead to the best overall solution. This may sound obvious, how could making the best choice at each step not lead to the best overall solution? However, as we'll see later, this is not always the case.
+
+    Now that we understand what greedy problems are, we can define greedy algorithms. A greedy algorithm is simply an algorithm that solves a greedy problem by making a series of locally optimal choices. At each step, the algorithm makes the choice that seems best at that moment, without worrying about the consequences of that choice on future steps. It uses a measure called a \textit{greedy heuristic} to assign a score to each possible choice, and then selects the choice with the best score. This process is repeated until a complete solution is found. If the problem the algorithm is attempting to solve is indeed a greedy problem and the greedy heuristic is chosen correctly, then the greedy algorithm will produce an optimal solution.
+
+    \section*{Implementing Greedy Algorithms}
+    When implementing a greedy algorithm, we first have to identify two things:
+    \begin{itemize}
+        \item The information structure: Is all the information we need available at the start of the algorithm (static) or does it change as we make choices (dynamic)?
+        \item The greedy heuristic: How do we compare the possible choices at each step to determine which is best?
+    \end{itemize}
+
+    If all the information we need is available at the start of the algorithm, then we can use a static greedy approach. In this approach, we typically sort the possible choices based on the greedy heuristic at the start of the algorithm. Then, we iterate through the sorted choices, making the best choice available at each step until we reach a complete solution.
+
+    \section*{Static Greedy Example: The Dragon of Loowater}
+    Let's look at an example of a static greedy algorithm: The Dragon of Loowater problem. In this problem, we have a dragon with several heads, each with a certain diameter. We also have several knights, each with a certain height. A knight can slay a dragon head if the knight's height is at least as large as the head's diameter. Each knight charges a fee equal to their height for slaying a head and can only slay a single head. Our goal is to slay all the dragon heads while minimizing the total fee paid to the knights.
+
+    On the other hand, if the information we need changes as we make choices, then we have to use a dynamic greedy approach. In this approach, we typically maintain a priority queue or some other data structure that allows us to efficiently retrieve the best choice based on the greedy heuristic at each step. After making a choice, we update the information structure and the priority queue accordingly, and then repeat the process until we reach a complete solution.
 
 \end{document}

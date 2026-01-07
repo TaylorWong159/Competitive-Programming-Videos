@@ -2,12 +2,20 @@ from manim import *
 
 class GreedyAlgorithms(Scene):
 
-    def init(self) -> None:
-        # Initialization code goes here
-        ...
-
     def construct(self) -> None:
-        self.init()
+        # Title
+        title = Text("Greedy Algorithms", font_size=48)
+        self.play(Write(title))
 
-        # Your animation code goes here
-        ...
+        # Overview
+
+        # Optimal Substructure
+
+        # Sorting
+
+        # Example using Sorting
+
+        # Priority Queue
+
+        # Example using Priority Queue
+
