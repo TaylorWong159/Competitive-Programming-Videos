@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{verbatim}
+
+\geometry{
+total={160mm,257mm},
+left=20mm,
+top=15mm,
+bottom=20mm
+}
+
+\begin{document}
+    \begin{center}
+        {\huge Brute Force}
+
+        Author: Taylor Wong
+    \end{center}
+
+    In this video we're going to be going over one of the simplest and yet one of the most complex problem solving paradigms: Brute Force. In short the brute force approach is about trying possible "potential solutions" until one is proven to work. This is an extremely powerful approach since it can be used to solve any problem where we can verify a solution quickly. These problems belong to a group of problems called NP which includes the vast majority of problems in competitive programming. So if it's so powerful why don't we use it for every problem? The number of potential solutions usually grows exponentially or faster. For example, consider the sorting problem. We're given an array of $n$ integers and have to return an array with the same integers but in sorted order. Our potential solutions will be all permutations of the original integers. It takes $O(n)$ time to verify if a potential solution is correct (simply scan through the array and if any elements are out of order return false). The number of permutations however is $n!$ so our overall runtime (in the worst case) will be $O(n \cdot n!)$ which is obviously much worse than our usual $O(n\log n)$
+
+\end{document}
