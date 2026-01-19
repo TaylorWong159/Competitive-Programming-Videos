@@ -217,3 +217,11 @@ __marimo__/
 
 # Manim
 **/media/
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.log
+*.pdf
